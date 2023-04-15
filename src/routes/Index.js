@@ -1,10 +1,12 @@
 import React from "react";
-import { SafeAreaView, View } from "react-native";
+import { View } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import HomeScreen from "../Screens/Home/Index";
 import ReportsScreen from "../Screens/Reports/Index";
 import NewStudentScreen from "../Screens/CreateStudent/Index";
+import Preload from "../Screens/Preload/Index";
+import MainTab from "./TabRoutes";
 
 const Stack = createNativeStackNavigator();
 
@@ -12,6 +14,16 @@ const Routes = () => {
   return (
     <View style={{ flex: 1 }}>
       <Stack.Navigator>
+        <Stack.Screen
+          name="Preload"
+          options={{ headerShown: false }}
+          component={Preload}
+        />
+        <Stack.Screen
+          name="MainTab_Screen"
+          options={{ headerShown: false }}
+          component={MainTab}
+        />
         <Stack.Screen
           name="Home_Screen"
           options={{ headerShown: false }}

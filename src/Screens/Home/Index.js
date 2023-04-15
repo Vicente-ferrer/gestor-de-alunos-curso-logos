@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
+import * as SecureStore from "expo-secure-store";
 import { StyleSheet, Text, View, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
 const Home = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
-  const [Data, setData] = useState();
+  const [data, setData] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -14,12 +15,17 @@ const Home = () => {
     })();
   }, []);
 
+  useEffect(() => {}, [data]);
+
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     setData(data);
-    alert(`Olha isso: ${type} e isso: ${data}`);
+    // alert(`Olha isso: ${type} e isso: ${data}`);
   };
-
+  const handleReset = () => {
+    setScanned(false);
+    SecureStore.setItemAsync(data);
+  };
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
@@ -29,7 +35,16 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container}>
+      <View>
+        <Text>Dado escaneado: {data}</Text>
+      </View>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          marginTop: 120,
+        }}
+      >
         <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
@@ -37,7 +52,13 @@ const Home = () => {
       </View>
       <View style={styles.container}>
         {scanned && (
-          <Button title={"Salvar"} onPress={() => console.log(Data)} />
+          <Button
+            title={"Salvar"}
+            onPress={() => {
+              handleReset();
+              setData("");
+            }}
+          />
         )}
       </View>
     </View>
@@ -54,4 +75,5 @@ const styles = StyleSheet.create({
     marginTop: 200,
   },
 });
+
 export default Home;
