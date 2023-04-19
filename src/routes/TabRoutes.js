@@ -12,6 +12,7 @@ const MainTab = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        safeAreaInsets: { bottom: 10 },
       }}
     >
       <Tab.Screen
@@ -21,6 +22,7 @@ const MainTab = () => {
           tabBarIcon: ({ color, size }) => (
             <Feather name="home" size={size} color={color} />
           ),
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen

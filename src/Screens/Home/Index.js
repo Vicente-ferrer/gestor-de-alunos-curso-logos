@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import * as SecureStore from "expo-secure-store";
-import { StyleSheet, Text, View, Button } from "react-native";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import { StyleSheet, Text, View, Button } from "react-native";
+import { AuthContext } from "../../context/contextMethods";
 
 const Home = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [data, setData] = useState("");
+
+  const { ValidateFrequency } = useContext(AuthContext);
 
   useEffect(() => {
     (async () => {
@@ -20,12 +23,13 @@ const Home = () => {
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     setData(data);
+    SecureStore.setItemAsync("StudentId", data);
     // alert(`Olha isso: ${type} e isso: ${data}`);
   };
   const handleReset = () => {
     setScanned(false);
-    SecureStore.setItemAsync(data);
   };
+
   if (hasPermission === null) {
     return <Text>Requesting for camera permission</Text>;
   }
@@ -48,6 +52,7 @@ const Home = () => {
         <BarCodeScanner
           onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
+          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
         />
       </View>
       <View style={styles.container}>
@@ -55,6 +60,7 @@ const Home = () => {
           <Button
             title={"Salvar"}
             onPress={() => {
+              ValidateFrequency();
               handleReset();
               setData("");
             }}

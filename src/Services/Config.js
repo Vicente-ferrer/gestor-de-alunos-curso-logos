@@ -1,7 +1,1 @@
-import axios from "axios";
-//I recommend you use your ip address instead of using localhost
-const Axios = axios.create({
-  baseURL: "http://localhost:8080/",
-});
-
-export default Axios;
+export const baseUrl = "http://192.168.0.9:8080/";

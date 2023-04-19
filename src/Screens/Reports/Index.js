@@ -1,26 +1,58 @@
-import React from "react";
-import { View, FlatList, StyleSheet, Text } from "react-native";
+import React, { useState, useContext } from "react";
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { AuthContext } from "../../context/contextMethods";
 
-import ListaFake from "../../Services/ListaFake";
+const DateScreen = () => {
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [filteredDate, setFilteredDate] = useState("");
+  const { exportSheetPerDay, exportSheetPerMonth } = useContext(AuthContext);
 
-const Item = ({ name, email }) => (
-  <View style={styles.item}>
-    <Text style={styles.nameTXT}>{name}</Text>
-    <Text style={styles.emailTXT}>{email}</Text>
-  </View>
-);
+  const handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+    setShowDatePicker(false);
 
-const App = () => {
-  const renderItem = ({ item }) => <Item name={item.name} email={item.email} />;
+    const year = currentDate.getFullYear();
+    const month = `${currentDate.getMonth() + 1}`.padStart(2, "0");
+    const day = `${currentDate.getDate()}`.padStart(2, "0");
+    const formattedDate = `${day}/${month}/${year}`;
+    setFilteredDate(formattedDate);
+  };
+
+  const showMode = () => {
+    setShowDatePicker(true);
+  };
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={ListaFake}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        style={styles.flatList}
-      />
+      <Text style={styles.Txt}>Data escolhida: {filteredDate}</Text>
+      <TouchableOpacity style={styles.button} onPress={showMode}>
+        <Text style={styles.buttonText}>Escolher data</Text>
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="spinner"
+          onChange={handleDateChange}
+          maximumDate={new Date()} // Evita datas anteriores à atual
+        />
+      )}
+
+      <TouchableOpacity
+        style={[styles.button, styles.exportButton]}
+        onPress={() => exportSheetPerDay(filteredDate)}
+      >
+        <Text style={styles.buttonText}>Exportar por dia</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, styles.exportButton]}
+        onPress={() => exportSheetPerMonth()}
+      >
+        <Text style={styles.buttonText}>Exportar por mês</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -28,39 +60,33 @@ const App = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f1f1f1",
+    backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
   },
-  flatList: {
-    width: "100%",
-    padding: 16,
+  button: {
+    width: "80%",
+    backgroundColor: "#007AFF",
+    paddingVertical: 15,
+    borderRadius: 10,
+    marginVertical: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  item: {
-    backgroundColor: "#ffffff",
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
-    elevation: 5,
+  exportButton: {
+    backgroundColor: "#FFFFFF",
+    borderColor: "#007AFF",
+    borderWidth: 2,
   },
-  nameTXT: {
+  buttonText: {
+    color: "black",
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    textTransform: "uppercase",
   },
-  emailTXT: {
-    fontSize: 16,
-    color: "#fff",
-    opacity: 0.8,
+  Txt: {
+    fontSize: 18,
   },
 });
 
-export default App;
+export default DateScreen;

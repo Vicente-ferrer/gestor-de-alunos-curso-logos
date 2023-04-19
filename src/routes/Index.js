@@ -12,7 +12,7 @@ const Stack = createNativeStackNavigator();
 
 const Routes = () => {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1 }} initialRouteName="Preload">
       <Stack.Navigator>
         <Stack.Screen
           name="Preload"
