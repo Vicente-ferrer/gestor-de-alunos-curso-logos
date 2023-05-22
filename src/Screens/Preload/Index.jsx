@@ -6,14 +6,9 @@ import { Alert, View, ActivityIndicator } from "react-native";
 
 const fixedLocation = {
   //ufpa
-  // latitude: -1.2990397292955775,
-  // longitude: -47.90069746618683,
-  //casa
-  latitude: -1.3034953490102914,
-  longitude: -47.910862487954574,
-  //ufpa dnv
-  // latitude: -1.2992697739225445,
-  // longitude: -47.90087449325273,
+  latitude: -1.2990397292955775,
+  longitude: -47.90069746618683,
+
 };
 
 function Preload() {
